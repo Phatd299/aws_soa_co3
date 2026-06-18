@@ -1,4 +1,4 @@
-### RDS High Availability and Resilience
+## RDS High Availability and Resilience
 
 Multi-AZ is a synchronous replication mechanism. When you write to the primary instance, the write is not acknowledged to the application until it has been committed on both the primary and the standby. This means zero data loss on failover — RPO is effectively zero. The tradeoff is a small write latency increase because every write must round-trip to the standby before completing.
 
@@ -20,7 +20,7 @@ Manual snapshots are retained indefinitely — they persist even after you delet
 
 RDS Proxy is worth knowing for the exam. It sits between your application and the RDS instance, maintaining a pool of database connections. If the application has many short-lived connections (common with Lambda functions), RDS Proxy prevents connection storms from overwhelming the database. During a Multi-AZ failover, RDS Proxy holds application connections and transparently re-routes them to the new primary, reducing the time your application sees errors from the full 60–120 seconds to just a few seconds.
 
-### Disaster Recovery Strategies
+## Disaster Recovery Strategies
 
 DR strategy selection is always a cost versus RTO/RPO tradeoff. The exam gives you a scenario with specific RTO and RPO requirements and asks which strategy meets them at the lowest cost, or gives you a budget and asks what RTO/RPO you can achieve.
 
@@ -44,7 +44,7 @@ The exam often presents a scenario with a stated RTO and RPO and asks you to cho
 
 Aurora Global Database sits between Pilot Light and Warm Standby. You get sub-second RPO and sub-minute RTO for the data layer. The application layer in the secondary region is the variable — if you run a scaled-down application tier alongside Aurora in the secondary region, that's effectively Warm Standby. If you have no application tier running, it's closer to Pilot Light.
 
-### Auto Scaling
+## Auto Scaling
 
 An Auto Scaling Group manages a fleet of EC2 instances. It has a minimum capacity, a desired capacity, and a maximum capacity. The minimum is a floor — ASG will never scale below it. The maximum is a ceiling. The desired is the target the ASG tries to maintain at any given time. When a scaling policy fires, it adjusts the desired capacity, and the ASG launches or terminates instances to match.
 
@@ -70,7 +70,7 @@ Instance refresh is how you update instances in an ASG when you've published a n
 
 Health checks in an ASG can come from two sources: EC2 status checks (default) or ELB health checks. EC2 status checks only detect whether the instance itself is reachable and the OS is running. ELB health checks detect whether the application on the instance is responding correctly. If you have an ASG behind a load balancer, you should enable ELB health checks — otherwise, an instance with a crashed application but a running OS will appear healthy to the ASG and won't be replaced.
 
-### Route 53 for Resilience
+## Route 53 for Resilience
 
 Route 53 health checks are the mechanism that transforms routing policies from static configurations into dynamic failover systems. Without health checks, a routing policy just distributes or directs traffic — it doesn't respond to failures. With health checks, Route 53 continuously monitors your endpoints and stops routing traffic to unhealthy ones.
 
@@ -92,7 +92,7 @@ Multivalue Answer routing: returns up to eight healthy records in response to DN
 
 Private hosted zones: associated with VPCs. DNS resolution for those domains only works from within the associated VPCs. Health checks on private resources require the CloudWatch alarm mechanism because Route 53 health checkers are outside the VPC and cannot reach private endpoints. You create a CloudWatch alarm on a metric from the private resource (e.g., an RDS metric, an ALB health check metric), then create a Route 53 health check that monitors the state of that CloudWatch alarm.
 
-### S3 Durability and Data Protection
+## S3 Durability and Data Protection
 
 S3 durability is 99.999999999% — eleven nines. This means if you store 10 million objects, you can expect to lose one object every 10,000 years on average. Durability is achieved by storing multiple redundant copies across at least three AZs (for Standard, Standard-IA, and Intelligent-Tiering storage classes). One Zone-IA stores data in a single AZ — durability is still 99.999999999% within that AZ, but if the AZ is destroyed, the data is gone.
 
@@ -112,7 +112,7 @@ Lifecycle policies transition objects between storage classes based on age or ot
 
 S3 Event Notifications fire when objects are created, deleted, or restored. Destinations: SNS, SQS, Lambda, and EventBridge. EventBridge is the most flexible destination because it supports routing to many more targets and content-based filtering. For near-real-time processing of S3 events, S3 → EventBridge → Lambda is the current recommended pattern.
 
-### AWS Backup
+## AWS Backup
 
 AWS Backup is a centralized backup management service that covers RDS, Aurora, DynamoDB, EBS, EFS, FSx, S3, and Storage Gateway. The exam pattern is: any question asking for centralized backup management with the least operational overhead across multiple services or accounts points to AWS Backup, not service-specific snapshot features.
 
