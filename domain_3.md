@@ -1,5 +1,4 @@
-### CloudFormation
----
+## CloudFormation
 
 CloudFormation is the AWS-native Infrastructure as Code service. You write a template in JSON or YAML describing the resources you want, and CloudFormation creates, updates, and deletes those resources as a unit called a stack. The fundamental value is repeatability and consistency — the same template deployed in two regions produces identical infrastructure.
 
@@ -37,8 +36,7 @@ CloudFormation Registry allows you to use third-party and private resource types
 
 Custom resources (AWS::CloudFormation::CustomResource) let you extend CloudFormation with arbitrary logic by invoking a Lambda function or sending a request to an SNS topic. Use cases: provisioning resources that CloudFormation doesn't natively support, calling external APIs during deployment, validating configuration before proceeding. The Lambda function receives a CloudFormation event with RequestType (Create, Update, Delete) and must send a response to a pre-signed S3 URL indicating success or failure.
 
-### Systems Manager
----
+## Systems Manager
 
 Systems Manager is a collection of capabilities under one service umbrella. The unifying theme is managing EC2 instances and on-premises servers at scale without SSH. Everything requires the SSM Agent to be installed and running on the managed instance, and the instance must have an IAM instance profile with the AmazonSSMManagedInstanceCore policy (or equivalent permissions).
 
@@ -66,8 +64,7 @@ Automation documents run multi-step operational workflows. Unlike Run Command (w
 
 Maintenance Windows are schedules for running disruptive tasks — patching, restarts, AMI creation — during a defined window when impact is acceptable. You define the window schedule, duration, and cutoff (how long before the end of the window to stop starting new tasks). Tasks within a window can be Run Command executions, Automation documents, Lambda invocations, or Step Functions executions.
 
-### Elastic Beanstalk
----
+## Elastic Beanstalk
 
 Elastic Beanstalk is a PaaS layer on top of EC2, Auto Scaling, ELB, RDS, and CloudWatch. You provide application code; Beanstalk handles the infrastructure. You retain full access to the underlying resources but don't have to manage them directly.
 
@@ -83,9 +80,9 @@ Deployment policies control how a new application version is deployed to the ins
 
 - Rolling with Additional Batch launches a new batch of instances first before updating any existing instances. During the entire deployment, full capacity is maintained because the extra batch fills the gap. After the new version is fully deployed and healthy, the extra batch is terminated. Slightly more expensive due to the temporary extra instances.
 
-Immutable launches a completely new Auto Scaling group with new instances running the new version. The new ASG sits alongside the existing one. Traffic still goes entirely to the old ASG. Health checks run on the new instances. If they pass, traffic is shifted to the new ASG (by attaching the new instances to the load balancer and the old ASG is removed). If health checks fail, the new ASG is simply terminated — the old ASG has been serving traffic the entire time and is unaffected. This is the safest deployment policy with the easiest rollback (terminate the new ASG). It temporarily doubles the instance count, so it's more expensive during the deployment window.
+- Immutable launches a completely new Auto Scaling group with new instances running the new version. The new ASG sits alongside the existing one. Traffic still goes entirely to the old ASG. Health checks run on the new instances. If they pass, traffic is shifted to the new ASG (by attaching the new instances to the load balancer and the old ASG is removed). If health checks fail, the new ASG is simply terminated — the old ASG has been serving traffic the entire time and is unaffected. This is the safest deployment policy with the easiest rollback (terminate the new ASG). It temporarily doubles the instance count, so it's more expensive during the deployment window.
 
-Traffic Splitting (Canary) sends a configurable percentage of traffic to the new version while the rest continues to the old version. If the new version passes health metrics during the evaluation period, traffic is shifted 100% to it. If it fails, traffic shifts back to 100% old version automatically. This is the only Beanstalk deployment policy that natively implements canary testing.
+- Traffic Splitting (Canary) sends a configurable percentage of traffic to the new version while the rest continues to the old version. If the new version passes health metrics during the evaluation period, traffic is shifted 100% to it. If it fails, traffic shifts back to 100% old version automatically. This is the only Beanstalk deployment policy that natively implements canary testing.
 
 Blue/Green in Elastic Beanstalk is not a deployment policy in the drop-down menu — it's a manual process. You clone the environment, deploy the new version to the clone (green), test it, then use the Swap Environment URLs feature to atomically swap the CNAMEs of the two environments. Production traffic hits green; the old blue environment is preserved for rollback. Swap Environment URLs takes effect within seconds at the DNS layer, but DNS TTL means some clients will hit blue for a few minutes after the swap.
 
@@ -97,8 +94,7 @@ RDS in Beanstalk: you can create an RDS instance inside the Beanstalk environmen
 
 Managed platform updates: Beanstalk can automatically apply platform updates (OS patches, runtime patches) during a maintenance window you define. You control whether to allow minor version updates, patch version updates, or both. Major version updates require manual action.
 
-### CodeDeploy
----
+## CodeDeploy
 
 CodeDeploy automates application deployments to EC2, on-premises servers, Lambda functions, and ECS services. It integrates with CodePipeline for CI/CD but can also be triggered directly via the API or CLI.
 
@@ -137,8 +133,7 @@ ECS deployments only support Blue/Green — there is no in-place ECS deployment 
 
 Automatic rollback can be configured at the deployment group level: roll back on deployment failure (any lifecycle event hook fails or a health check fails) or roll back when alarms are triggered (CloudWatch alarms you specify — if they go to ALARM state during or shortly after deployment, CodeDeploy triggers rollback). For Lambda and ECS, rollback means shifting traffic back to the previous version. For EC2 in-place, rollback means re-deploying the last known good revision.
 
-### EC2 Image Builder and AMI Management
----
+## EC2 Image Builder and AMI Management
 
 An AMI (Amazon Machine Image) is a template for launching EC2 instances. It contains the OS, installed software, configuration, and one or more EBS volume snapshots. Golden AMI is the pattern of pre-building AMIs with all required software, patches, agents, and configuration baked in, so instances launch in a fully configured state with no userdata installation required. This reduces launch latency and eliminates the risk of packages failing to install at launch time.
 
@@ -162,8 +157,7 @@ AMI lifecycle in the context of ASGs: after building a new golden AMI, you updat
 
 Launch templates are the modern replacement for launch configurations. Key advantages: versioning (you can have multiple versions and specify a default), support for mixed instance types and purchase options (Spot and On-Demand in the same ASG), and support for all current EC2 features. Launch configurations are legacy and do not support these features. The exam favors launch templates.
 
-### Service Catalog
----
+## Service Catalog
 
 Service Catalog lets you create and manage a catalog of approved IT products — infrastructure as code templates — that end users can deploy through a self-service portal without needing CloudFormation expertise or broad IAM permissions.
 
