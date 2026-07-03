@@ -1,9 +1,6 @@
-## Domain 1
+## CloudWatch
 
-### CloudWatch
----
-
-#### CloudWatch Metrics
+### CloudWatch Metrics
 
 Every AWS service publishes metrics to CloudWatch automatically. These are called standard metrics and they're free. The granularity is 1 minute by default for most services, 5 minutes for some older ones like basic EC2 monitoring.
 
@@ -23,7 +20,7 @@ The EC2 metrics you get by default are: CPUUtilization, NetworkIn, NetworkOut, N
 
 What you do NOT get by default: memory utilization, disk space utilization (the percentage of disk used, not just I/O operations), swap usage, and process-level data. These require the CloudWatch Agent because they're inside the guest OS where the hypervisor can't see.
 
-#### CloudWatch Agent
+### CloudWatch Agent
 
 The CloudWatch Agent is software you install on EC2 instances (and on-premises servers). It collects two categories of data: OS-level metrics that the hypervisor can't see, and log files from the local filesystem.
 
@@ -37,7 +34,7 @@ For logs, you define log files or Windows Event Log sources in the agent config.
 
 The agent requires an IAM instance profile with permissions to call cloudwatch:PutMetricData for metrics and logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents, and logs:DescribeLogStreams for logs. It also needs ssm:GetParameter if it's fetching its config from Parameter Store.
 
-#### CloudWatch Logs
+### CloudWatch Logs
 
 Log Groups are the top-level container. You set retention on the Log Group — anywhere from 1 day to 10 years, or never expire. The default is never expire, which accumulates cost indefinitely. The exam tests this: if you need to control cost, set a retention policy.
 
@@ -55,7 +52,7 @@ Contributor Insights analyzes log data to identify the top contributors to a pat
 
 Logs Insights vs Contributor Insights: use Logs Insights for ad-hoc investigation — you want to explore what happened during an incident. Use Contributor Insights for ongoing operational visibility — you want a continuously updated view of your top contributors.
 
-#### CloudWatch Alarms
+### CloudWatch Alarms
 
 An alarm monitors a single metric (or Metric Math expression) and transitions between three states: OK, ALARM, and INSUFFICIENT_DATA. INSUFFICIENT_DATA means there isn't enough data to evaluate the condition — this happens when a metric hasn't published any data points in the evaluation period.
 
@@ -71,7 +68,7 @@ You cannot set a Composite Alarm action directly on an Auto Scaling policy — c
 
 Period-based alarms can use high-resolution metrics with a period as low as 10 or 30 seconds. Standard alarms have a minimum period of 60 seconds. This matters when you need faster detection of transient issues — a 10-second alarm fires much faster than a 60-second one, but costs more.
 
-#### CloudWatch Anomaly Detection
+### CloudWatch Anomaly Detection
 
 Anomaly Detection trains an ML model on the history of a metric and produces an expected value band — a range above and below the predicted value. The alarm fires when the metric exits the band.
 
@@ -83,8 +80,7 @@ You can also adjust the anomaly threshold by setting the number of standard devi
 
 When to use Anomaly Detection versus static thresholds: use static thresholds when the acceptable range is fixed and well-understood (disk at 90% is always bad regardless of day or time). Use Anomaly Detection when the metric has natural variation and you care about deviations from the pattern rather than absolute values.
 
-### CloudTrail
----
+## CloudTrail
 
 CloudTrail records API calls made to AWS — who called what, when, from what IP, and with what parameters. Every AWS action is an API call, so CloudTrail is a complete audit trail of everything that happened in your account.
 Event types, in detail:
@@ -105,8 +101,7 @@ CloudTrail Lake is the newer feature — it's a managed data store for CloudTrai
 
 One important detail: CloudTrail is not real-time. Log files are delivered to S3 within about 15 minutes of the API call. If you need near-real-time response to API calls, the pattern is CloudTrail → EventBridge (which does get CloudTrail management events in near-real-time via a separate pipeline) → Lambda or SNS.
 
-### X-Ray
----
+## X-Ray
 
 X-Ray collects trace data from distributed applications. A trace represents a single request as it flows through your entire system. A segment represents the work done by one service during that request. Subsegments represent downstream calls made within that service — calls to DynamoDB, HTTP requests to another service, SQL queries, etc. Annotations are indexed key-value pairs you attach to segments for filtering. Metadata is non-indexed key-value data for additional context.
 
@@ -126,8 +121,7 @@ X-Ray Insights (not to be confused with CloudTrail Insights) automatically detec
 
 X-Ray Analytics lets you interactively query trace data — filter by annotation, compare response time distributions between different time windows, drill into specific error types. It's the analysis layer on top of raw traces.
 
-### EventBridge
----
+## EventBridge
 
 EventBridge is the evolution of CloudWatch Events. The two are the same service — CloudWatch Events is the legacy name for the default event bus. All the old CloudWatch Events rules still work; they're just surfaced in the EventBridge console now.
 

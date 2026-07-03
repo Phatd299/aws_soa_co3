@@ -1,5 +1,4 @@
-### IAM Advanced Concepts
----
+## IAM Advanced Concepts
 
 IAM policy evaluation is the foundation of everything in this domain. When an AWS API call is made, IAM evaluates all applicable policies and decides whether to allow or deny. The evaluation order is: explicit Deny wins above everything else, then service control policies (SCPs), then resource-based policies, then identity-based policies, then permission boundaries, then session policies. The effective permission is the intersection of all these layers — not the union.
 
@@ -31,7 +30,7 @@ IAM policy conditions are key-value pairs that add context to policy evaluation.
 
 Service-linked roles are IAM roles predefined by AWS services. They have exactly the permissions the service needs to function. You can't modify the trust policy or the permissions policy. They're created automatically when you enable the service (or manually if automatic creation isn't supported). Examples: AWSServiceRoleForElasticLoadBalancing, AWSServiceRoleForAutoScaling.
 
-### KMS and Encryption
+## KMS and Encryption
 
 KMS manages cryptographic keys used to encrypt AWS resources and application data. The service is regional — keys are specific to a region and never leave the region (unless you explicitly use multi-region keys).
 
@@ -59,7 +58,7 @@ S3 server-side encryption options: SSE-S3 uses AWS-managed keys, fully managed, 
 
 EBS encryption: when you enable encryption for an EBS volume, all data at rest, data in transit between the volume and the instance, snapshots, and volumes created from those snapshots are encrypted. There's no performance impact in modern instance families — encryption is handled in hardware. You can enforce EBS encryption at the account level so all new volumes are automatically encrypted.
 
-### GuardDuty
+## GuardDuty
 
 GuardDuty is a threat detection service that uses ML and threat intelligence to identify malicious or anomalous activity. It analyzes data sources you don't have to configure — it reads VPC Flow Logs, CloudTrail management events, CloudTrail S3 data events (if enabled), DNS query logs, and Kubernetes audit logs (if enabled for EKS) automatically. You enable GuardDuty with one click and it starts analyzing within minutes.
 
@@ -75,7 +74,7 @@ GuardDuty has optional protection plans: S3 Protection (analyzes S3 data plane e
 
 Suppression rules let you automatically archive findings that match a filter. Use this to suppress known-safe findings — for example, suppress port scan findings from your security scanner's IP address. Suppressed findings are not deleted — they're archived and still available for review.
 
-### Inspector
+## Inspector
 
 Inspector performs automated vulnerability assessments. It scans for software vulnerabilities (CVEs) and unintended network exposure. There are two assessment types.
 
@@ -89,7 +88,7 @@ Inspector does not remediate. It generates findings with remediation recommendat
 
 Multi-account Inspector: delegate an administrator account via Organizations. The administrator gets aggregated findings across all member accounts.
 
-### AWS Config
+## AWS Config
 
 Config is a configuration history and compliance service. It records the configuration state of AWS resources over time and evaluates those configurations against rules you define.
 
@@ -109,7 +108,7 @@ Resource relationships: Config tracks relationships between resources — for ex
 
 Config timeline: for any resource, you can view its complete configuration history — every configuration change recorded as a configuration item with a timestamp. You can compare configurations at two points in time to see exactly what changed. Paired with CloudTrail, you can correlate configuration changes with the API calls that caused them.
 
-### Macie
+## Macie
 
 Macie uses ML to automatically discover, classify, and protect sensitive data in S3. It identifies PII (names, addresses, social security numbers, passport numbers, credit card numbers), financial data, credentials (access keys, passwords), protected health information, and custom data types you define.
 
@@ -123,8 +122,7 @@ Multi-account Macie: delegate an administrator account via Organizations. Centra
 
 Macie is specifically for S3. If a question involves sensitive data detection on EC2, RDS, or any non-S3 service, Macie is not the answer. For those scenarios, you'd use application-level controls, database activity monitoring, or third-party DLP tools.
 
-### Security Hub
----
+## Security Hub
 
 Security Hub is the aggregation and normalization layer for security findings across AWS security services and third-party tools. It ingests findings from GuardDuty, Inspector, Macie, Config, IAM Access Analyzer, Firewall Manager, Systems Manager Patch Manager, and third-party integrations (CrowdStrike, Palo Alto, Splunk, etc.).
 
@@ -140,8 +138,7 @@ Insights are correlated views of findings — filtered, grouped, and aggregated.
 
 Multi-account Security Hub: designate an administrator account. The administrator sees all findings from all member accounts. Findings from member accounts appear with the member account ID so you can identify which account they came from. Cross-region aggregation lets you view findings from all regions in a single Region.
 
-### WAF and Shield
----
+## WAF and Shield
 
 WAF is a web application firewall that operates at Layer 7 — it inspects HTTP/HTTPS request content. You attach WAF to CloudFront, ALB, API Gateway, AppSync, or Cognito user pools via Web ACLs.
 
@@ -163,7 +160,7 @@ Shield Advanced provides enhanced protection with additional features: more soph
 
 Firewall Manager is the centralized management service for WAF rules, Shield Advanced protections, Security Groups, and Network Firewall policies across an Organization. You define security policies in the management account and Firewall Manager automatically applies them to all existing and new resources in member accounts. The key value: when a new account joins the Organization or a new ALB is created, Firewall Manager ensures the WAF Web ACL is automatically attached without any manual action.
 
-### Secrets Manager
+## Secrets Manager
 
 Secrets Manager stores and manages secrets — database credentials, API keys, OAuth tokens, SSH keys. Unlike Parameter Store SecureString, Secrets Manager is purpose-built for secrets and adds automatic rotation.
 
@@ -177,8 +174,7 @@ Resource-based policies on secrets control cross-account access. You can grant a
 
 Secrets Manager also integrates with CloudFormation via dynamic references — you reference a secret in a template as {{resolve:secretsmanager:MySecret:SecretString:password}} and CloudFormation retrieves the current value at deployment time. This means you don't hardcode secrets in templates.
 
-### Network Security: Security Groups and NACLs
----
+## Network Security: Security Groups and NACLs
 
 Security Groups are stateful virtual firewalls attached to ENIs (Elastic Network Interfaces). Every EC2 instance, RDS instance, ELB, Lambda function (in a VPC), and other ENI-backed resource has security groups.
 
@@ -200,8 +196,7 @@ NACLs support explicit Deny rules. This is the critical distinction from Securit
 
 The exam scenario is typically: "A specific IP address is repeatedly attacking your application. How do you block it without modifying the application or Security Groups?" The answer is a NACL Deny rule for that IP in the subnet's NACL. For global blocking across a CloudFront distribution, the answer is a WAF IP set Block rule.
 
-### AWS Organizations Security Controls
----
+## AWS Organizations Security Controls
 
 Organizations provides hierarchical account management. The root is the management account. Organizational Units (OUs) group accounts. SCPs apply to OUs or individual accounts.
 
