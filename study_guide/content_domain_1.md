@@ -10,6 +10,7 @@
 
 - Skill 1.1.4: Create, implement, and manage customizable and shareable CloudWatch dashboards that display metrics and alarms for AWS resources across multiple accounts and AWS Regions. 
 pin
+
 - Skill 1.1.5: Configure AWS services to send notifications to Amazon Simple Notification Service (Amazon SNS) and to invoke alarms that send notifications to Amazon SNS.
 
 ## Task 1.2: Identify and remediate issues by using monitoring and availability metrics. 
