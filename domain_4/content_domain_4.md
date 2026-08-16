@@ -16,9 +16,9 @@
 
 - Skill 4.2.1: Implement and enforce a data classification scheme. 
 
-- Skill 4.2.2: Implement, configure, and troubleshoot encryption at rest (for example, AWS Key Management Service [AWS KMS]).
+- Skill 4.2.2: Implement, configure, and troubleshoot encryption at rest (for example, AWS Key Management Service (AWS KMS).
 
-- Skill 4.2.3: Implement, configure, and troubleshoot encryption in transit (for example, AWS Certificate Manager [ACM]).
+- Skill 4.2.3: Implement, configure, and troubleshoot encryption in transit (for example, AWS Certificate Manager - ACM).
 
 - Skill 4.2.4: Securely store secrets by using AWS services. 
 
